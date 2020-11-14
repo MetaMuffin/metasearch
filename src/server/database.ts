@@ -17,7 +17,7 @@ export class Metadb {
 		var result = await this.dbcon!.get("SELECT freq FROM words WHERE word = ?;",
 									   [word.toLowerCase()])
 
-		return result.freq
+		return (result ?? {freq: 0}).freq ?? 0
 	}
 
 	public async close() {
