@@ -1,9 +1,26 @@
-import { Database } from "sqlite3";
+import sqlite from "sqlite3"
+import { Database, open } from "sqlite"
 
+export class Metadb {
+	dbcon: Database | null
 
-var db = new Database("data/db")
-db.serialize(() => {
-    
+	constructor() {
+		this.dbcon = null
+	}
 
+	public async init() {
+		this.dbcon = await open({filename: __dirname + "/../../data/db",
+								driver: sqlite.Database})
+	}
 
-})
+	public async word_freq(word: string) {
+		var result = await this.dbcon!.get("SELECT freq FROM words WHERE word = ?;",
+									   [word.toLowerCase()])
+
+		return result.freq
+	}
+
+	public async close() {
+		await this.dbcon!.close()
+	}
+}
