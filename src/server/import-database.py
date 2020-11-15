@@ -9,7 +9,7 @@ c = db.cursor()
 
 print("Re-creating table...")
 c.execute("DROP TABLE IF EXISTS words;")
-c.execute("CREATE TABLE words (id int, word varchar(255) UNIQUE, freq int);")
+c.execute("CREATE TABLE words (id INTEGER PRIMARY KEY ASC, word varchar(255) UNIQUE, freq int);")
 
 statement_buf = []
 
@@ -20,11 +20,11 @@ for line in reader:
     tokens = line.split("\t")
     word_id, word, freq = int(tokens[0]), tokens[1].lower(), int(tokens[3])
 
-    statement_buf.append((word_id, word, freq, freq))
+    statement_buf.append((word, freq, freq))
 
     if len(statement_buf) >= 10:
         c.executemany("""
-            INSERT INTO words(id, word, freq) VALUES(?, ?, ?)
+            INSERT INTO words(word, freq) VALUES(?, ?)
             ON CONFLICT(word) DO UPDATE SET freq = freq + ?;""", statement_buf)
 
         statement_buf = []
