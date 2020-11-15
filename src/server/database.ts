@@ -13,11 +13,21 @@ export class Metadb {
 								driver: sqlite.Database})
 	}
 
-	public async word_freq(word: string) {
+	public async word_freq(word: string): Promise<number> {
 		var result = await this.dbcon!.get("SELECT freq FROM words WHERE word = ?;",
 									   [word.toLowerCase()])
 
-		return (result ?? {freq: 0}).freq ?? 0
+		return result?.freq || 0;
+	}
+
+	public async add_word(word: string, freq: number): Promise<boolean> {
+		try {
+			return (await this.dbcon!.run("INSERT INTO words(word, freq) VALUES(?, ?);",
+										   [word.toLowerCase(), freq])).changes == 1
+		}
+		catch (x) {
+			return false
+		}
 	}
 
 	public async close() {
