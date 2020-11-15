@@ -32,6 +32,7 @@
     "p5": "^1.1.9",
     "raphael": "^2.3.0",
     "source-map-loader": "^1.1.1",
+    "sqlite": "^4.0.17",
     "sqlite3": "^5.0.0",
     "timsort": "^0.3.0",
     "ts-loader": "^8.0.6",
