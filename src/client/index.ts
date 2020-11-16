@@ -1,5 +1,5 @@
 import { DataSet, Network, Node, Edge, Options } from "vis";
-import { research } from "./scraper";
+import { researchKeywords, iterate, addNewKws } from "./scraper";
 
 export interface Keyword {
     keyword: string
@@ -7,6 +7,7 @@ export interface Keyword {
     id: number
 }
 export interface Link {
+    ref: string
     weight: number
     from: number
     to: number
@@ -21,19 +22,6 @@ export var network: Network
 window.onload = () => {
     var container = document.getElementById("graph");
     if (!container) throw new Error("KEK");
-    nodes.update([
-        {id: 0, label: "A"},
-        {id: 1, label: "B"},
-        {id: 2, label: "C"},
-        {id: 3, label: "D"},
-        {id: 4, label: "E"},
-    ])
-    edges.update([
-        {from: 0, to: 1},
-        {from: 0, to: 2},
-        {from: 2, to: 3},
-        {from: 0, to: 4},
-    ])
 
     var options: Options = {};
     network = new Network(container, { nodes, edges }, options);
@@ -45,8 +33,16 @@ window.onload = () => {
             var idn: number = ev.nodes[0]
             var kw = keywords.find(n => n.id == idn)
             if (!kw) return
-            research([kw])
+            iterate([kw])
         }
     })
+
+    var start = prompt("Research entry point:", "bestlinuxgamers") || "bestlinuxgamers"
+    var nkw = {
+        id: 0,
+        keyword: start,
+        weight: 3.0
+    }
+    addNewKws([],[nkw])
 };
 

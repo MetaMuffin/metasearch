@@ -1,6 +1,6 @@
-import { Metadb } from "./database"
+import { WordFreqDB } from "../server/database"
 
-var db = new Metadb();
+var db = new WordFreqDB();
 
 (async () => {
 	console.log("Testing database stuff")

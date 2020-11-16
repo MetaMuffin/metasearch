@@ -1,7 +1,7 @@
 import sqlite from "sqlite3"
 import { Database, open } from "sqlite"
 
-export class Metadb {
+export class WordFreqDB {
 	dbcon: Database | null
 
 	constructor() {
@@ -9,13 +9,15 @@ export class Metadb {
 	}
 
 	public async init() {
-		this.dbcon = await open({filename: __dirname + "/../../data/db",
-								driver: sqlite.Database})
+		this.dbcon = await open({
+			filename: __dirname + "/../../data/db",
+			driver: sqlite.Database
+		})
 	}
 
 	public async word_freq(word: string): Promise<number> {
 		var result = await this.dbcon!.get("SELECT freq FROM words WHERE word = ?;",
-									   [word.toLowerCase()])
+			[word.toLowerCase()])
 
 		return result?.freq || 0;
 	}
@@ -23,7 +25,7 @@ export class Metadb {
 	public async add_word(word: string, freq: number): Promise<boolean> {
 		try {
 			return (await this.dbcon!.run("INSERT INTO words(word, freq) VALUES(?, ?);",
-										   [word.toLowerCase(), freq])).changes == 1
+				[word.toLowerCase(), freq])).changes == 1
 		}
 		catch (x) {
 			return false
